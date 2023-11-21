@@ -43,8 +43,8 @@ print(minDouble)
 let maxDouble = Double.greatestFiniteMagnitude
 print(maxDouble)
 
- >=, <=, ==, !=, !
-let age = 18
+// >=, <=, ==, !=, !
+age = 18
 
 // Условный оператор (выполнится если это true)
 if age >= 18 { // result = true
@@ -69,8 +69,8 @@ if age <= 17 { // result = true && false
     print("Можно расслабиться")
 }
 
- Цикл for
- 1, 2, 3, 4, 5, 6
+// Цикл for
+// 1, 2, 3, 4, 5, 6
 
 let str = "25"
 
@@ -84,7 +84,7 @@ for i in 1...20 {
     }
 }
 
- конкатенация строк и интерполяция
+//конкатенация строк и интерполяция
 
 let x = 10
 let y = 20
@@ -132,3 +132,4 @@ if !isWeekend {
 } else {
     print("Выходной")
 }
+
