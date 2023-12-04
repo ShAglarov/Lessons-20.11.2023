@@ -156,18 +156,24 @@ var resultData: [Int : String] = [
                                    2 : "Отсутствуует подключение к интернету",
                                    3 : "Сервер не отвечает"
                                  ]
-let resultKey = resultData.randomElement()?.key
+let resultRequestData = resultData.randomElement()
 
 func fetchData(for request: String) -> ResultRequest {
-    guard let keyRequest = resultKey else { return ResultRequest.failure("запрос не отправлен")}
+    guard let requestData = resultRequestData else { return ResultRequest.failure("запрос не отправлен")}
     
-    switch keyRequest {
-    case 1: return ResultRequest.success(resultData[keyRequest] ?? "")
-    case 2: return ResultRequest.failure(resultData[keyRequest] ?? "")
-    case 3: return ResultRequest.failure(resultData[keyRequest] ?? "")
-    default:
-        return ResultRequest.failure("Ошибка \(resultData[keyRequest] ?? "")")
+    for (key, value) in [requestData] {
+        switch key {
+        case 1: 
+            return ResultRequest.success(value)
+        case 2:
+            return ResultRequest.failure(value)
+        case 3:
+            return ResultRequest.failure(value)
+        default:
+            return ResultRequest.failure("Ошибка \(resultData[key] ?? "")")
+        }
     }
+    return .failure("некоторый fallback-кейс")
 }
 
 // Выполняем запрос
