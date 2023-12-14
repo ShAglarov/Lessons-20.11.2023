@@ -59,134 +59,202 @@ import Foundation
     self представляет измененный экземпляр, который заменяет исходный экземпляр после завершения метода.
  */
 
-//struct Point {
-//    var x: Int
-//    var y: Int
-//}
-//
-////var point1 = Point(x: 6, y: 1)
-////print("point1 =\nx = \(point1.x) \ny = \(point1.y)")
-//
-//class Point2 {
-//    let x: Int
-//    let y: Int
+ //Протоколы - полиморфное поведение
+
+//class Fighter {
+//    var ability: SuperAbility?
 //    
-//    init(x: Int, y: Int) {
-//        self.x = x
-//        self.y = y
-//    }
-//    
-//    init() {
-//        self.x = 0
-//        self.y = 0
-//    }
-//    
-//    init(x: Int) {
-//        self.x = x
-//        self.y = x + 10
-//    }
-//}
-//
-////var point2 = Point2()
-//
-//func updatePoint(_ point: Point) {
-//    var tempPoint = point
-//    tempPoint.x = 10
-//    tempPoint.y = 5
-//    
-   // point1 = tempPoint
-//}
-
-//func updatePoint2(_ point: Point2) {
-//    point.x = 10
-//    point.y = 15
-//}
-
-
-//updatePoint2(point2)
-
-
-//print("point2 =\nx = \(point2.x) \ny = \(point2.y)")
-
-
-//let pointStruct = Point(x: 0, y: 0)
-//let pointClass = Point2()
-//
-//// Инкапсуляция
-//
-//class BankAccount {
-//    private var balance: Double = 0.0
-//    
-//    func calc(symbol: Character, count: Int) {
-//        switch symbol {
-//        case "+": addBalance(countPoint: count)
-//        case "-": minusBalance(countPoint: count)
-//        default: 0
-//        }
-//    }
-//    
-//    private func addBalance(countPoint: Int) {
-//        balance += Double(countPoint)
-//    }
-//    private func minusBalance(countPoint: Int) {
-//        balance += Double(countPoint)
-//    }
-//    
-//    func displayBalance() {
-//        print(balance)
-//    }
-//}
-//
-//
-//let account = BankAccount()
-//
-//account.calc(symbol: "+", count: 100)
-
-// Наследование
-
-//class Arena {
 //    let boxer = Boxer()
 //    let wrestler = Wrestler()
 //}
 //
-//class Fighter {
-//    
-//    var hp: Int
-//    
-//    func superAttack() {
-//        print("Боец атакует")
-//    }
-//    
-//    init() {
-//        self.hp = 100
+//class Boxer: SuperAbility {
+//    func superAttack(_ name: String) {
+//        print("\(name) бьет хук")
 //    }
 //}
 //
-//class Boxer: Fighter {
-//    override func superAttack() {
-//        super.superAttack()
-//        print("Мощный удар")
+//class Wrestler: SuperAbility {
+//    func superAttack(_ name: String) {
+//        print("\(name) делает бросок")
+//    }
+//}
+//
+//let fighter = Fighter()
+//
+//fighter.ability = Boxer()
+//
+//fighter.ability?.superAttack("dfvdf")
+
+//fighter.ability?.superAttack("Alex")
+//fighter.ability = Wrestler()
+//fighter.ability?.superAttack("Maxim")
+
+
+//protocol LetterBelonging {
+//    func writeText(_ text: String)
+//}
+//
+//class Hand {
+//    var letterBelonging: LetterBelonging?
+//    
+//    func writeText(_ text: String) {
+//        letterBelonging?.writeText("\(text)")
+//    }
+//}
+//
+//class RedPen: LetterBelonging {
+//    func writeText(_ text: String) {
+//        print("Пишем красной пастой: \(text)")
+//    }
+//}
+//
+//class BluePen: LetterBelonging {
+//    func writeText(_ text: String) {
+//        print("Пишем синей пастой: \(text)")
+//    }
+//}
+//
+//class Marker: LetterBelonging {
+//    func writeText(_ text: String) {
+//        print("Пишем маркером: \(text)")
+//    }
+//}
+//
+//let hand = Hand()
+//
+//hand.letterBelonging = RedPen()
+//hand.writeText("меня зовут Шамиль")
+//hand.letterBelonging = Marker()
+//hand.writeText("меня зовут Шамиль")
+
+//protocol Speed {
+//    var speed: Int { get }
+//    var brend: String { get }
+//}
+//
+//class Transport {
+//    var transport: Speed?
+//    
+//    func checkSpeed() {
+//        print("Скорость автомобиля \(transport?.brend ?? "") = \(transport?.speed ?? 0)")
+//    }
+//}
+//
+//class BMW: Speed {
+//    let brend: String = "BMW"
+//    var speed: Int {
+//        100
 //    }
 //    
-//    override init() {
-//        super.init()
-//        self.hp = 50
+//    
+//}
+//
+//class Mersedes: Speed {
+//    let brend: String = "Mersedes"
+//    var speed: Int {
+//        98
 //    }
 //}
 //
-//class Wrestler: Fighter {
-//    override func superAttack() {
-//        super.superAttack()
-//        print("Опрокинул соперника")
-//    }
-//    override init() {
-//        super.init()
-//        self.hp = 200
-//    }
-//}
+//let car = Transport()
 //
-//let boxer = Boxer()
-//let wrestler = Wrestler()
+//car.transport = BMW()
+//car.checkSpeed()
 //
-//print(boxer.hp)
-//print(wrestler.hp)
+//car.transport = Mersedes()
+//car.checkSpeed()
+
+class Fighter {
+    var name: String = ""
+    
+    var typeFighter: String {
+        "Иван"
+    }
+
+    var isDead: Bool = false {
+        didSet {
+            if isDead {
+                print("Боец \(name) погиб")
+            }
+        }
+    }
+    
+    var weapon: String = ""
+    
+    private var _health: Int = 100
+    
+    var health: Int {
+        get {
+            return _health
+        }
+        set {
+            _health = _health - 10
+            if _health <= 0 {
+                isDead.toggle()
+            }
+        }
+    }
+    
+    func kick(damage: Int) -> Int {
+        let damage = damage + Int.random(in: 1...100)
+        return damage
+    }
+    
+}
+
+class Warrior: Fighter {
+    
+    let randamazier = Int.random(in: 1...5)
+     
+    if randamazier == 3 {
+        useUltimateAbility(superKick: kick(damage: Int.random(in: 30..<1000)))
+    }
+    
+    func useUltimateAbility(superKick: Int) {
+        kick(damage: superKick)
+        print("\(name) разозлился и нанес противнику супер удар")
+    }
+}
+
+class Mag: Fighter {
+    func useUltimateAbility() {
+        
+    }
+}
+
+
+
+let fighter = Fighter()
+
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+fighter.health = 10
+print(fighter.health)
+
