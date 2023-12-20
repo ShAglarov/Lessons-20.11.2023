@@ -7,254 +7,215 @@
 
 import Foundation
 
-//------------Еще разница между struct и class-----------------------
-/*
- 1_Ссылочный тип vs Значимый тип:
- *_ Классы являются ссылочными типами. Это означает, что когда вы присваиваете экземпляр
-    класса переменной или константе, вы фактически присваиваете ссылку на этот объект.
- *_ Структуры являются значимыми типами. Когда вы присваиваете экземпляр структуры
-    переменной или константе, создается копия этой структуры.
- 2_Наследование:
- *_ Классы могут наследовать свойства и методы от других классов.
- *_ Структуры не поддерживают наследование.
- 3_Деинициализаторы:
- *_ Классы могут иметь деинициализаторы, которые выполняют определенный код перед тем,
-    как экземпляр удаляется из памяти.
- *_ Структуры не имеют деинициализаторов.
- 4_Идентичность и равенство:
- *_ У классов есть понятие "идентичности".
-    Вы можете проверить, указывают ли две переменные на один и тот же объект с помощью операторов "===" и "!==".
- *_ Структуры не имеют понятия идентичности. Они сравниваются только на равенство.
- 5_Возможность изменения свойств:
- *_ Для классов, если свойство объявлено как var, то оно может быть изменено из любого экземпляра,
-    даже если этот экземпляр объявлен как let.
- *_ Для структур, если экземпляр объявлен как let, то все его свойства становятся неизменяемыми,
-    независимо от того, были ли свойства объявлены как var или let.
- 6_ARC (Automatic Reference Counting):
- *_ Классы поддерживают автоматическое подсчета ссылок (ARC), которое управляет жизненным циклом экземпляра.
-    Это может привести к утечкам памяти, если не управлять сильными циклическими ссылками (например, с использованием weak или unowned).
- *_ Структуры не участвуют в ARC, так как они копируются при передаче и не используют ссылочный подсчет.
- 7_Синтаксис инициализации:
- *_ Структуры автоматически получают инициализатор "по членам", который позволяет инициализировать каждое свойство структуры.
- *_ Классам такой инициализатор предоставляется автоматически только в отсутствие пользовательских инициализаторов.
- 8_Мутация Методов:
- *_ В структурах, методы, которые изменяют свойства структуры, должны быть помечены ключевым словом mutating.
-   Это делает очевидным, что метод изменяет структуру.
- *_ В классах такой необходимости нет, так как любой метод может изменить свойства класса.
- 9_Type Casting:
- *_ Классы поддерживают приведение типов (type casting) с использованием as?, as! и is.
- *_ Структуры не поддерживают приведение типов в иерархии наследования, так как у них нет наследования.
- 8_Extensions:
- И классы, и структуры могут быть расширены с помощью extension, но если вы добавите
- новый инициализатор в расширении структуры, он не сможет изменять свойства,
- объявленные как let, если у них уже есть значения по умолчанию.
- 9_Ключевое слово self:
- В Swift ключевое слово self используется для обозначения текущего экземпляра объекта, структуры или перечисления.
- Однако его использование и поведение слегка различаются в контексте классов и структур.
- *_ В классах: self обычно используется для различия свойств и методов класса от
-    параметров функций или для ссылки на текущий экземпляр класса. 
-
- *_ В структурах: Как и в классах, self указывает на текущий экземпляр структуры.
-    Однако при работе с методами, которые модифицируют структуру (отмечены как mutating),
-    self представляет измененный экземпляр, который заменяет исходный экземпляр после завершения метода.
- */
-
- //Протоколы - полиморфное поведение
-
 //class Fighter {
-//    var ability: SuperAbility?
 //    
-//    let boxer = Boxer()
-//    let wrestler = Wrestler()
-//}
-//
-//class Boxer: SuperAbility {
-//    func superAttack(_ name: String) {
-//        print("\(name) бьет хук")
+//    var name: String
+//    var typeFighter: String {
+//        return "какой то боец"
 //    }
-//}
-//
-//class Wrestler: SuperAbility {
-//    func superAttack(_ name: String) {
-//        print("\(name) делает бросок")
-//    }
-//}
-//
-//let fighter = Fighter()
-//
-//fighter.ability = Boxer()
-//
-//fighter.ability?.superAttack("dfvdf")
-
-//fighter.ability?.superAttack("Alex")
-//fighter.ability = Wrestler()
-//fighter.ability?.superAttack("Maxim")
-
-
-//protocol LetterBelonging {
-//    func writeText(_ text: String)
-//}
-//
-//class Hand {
-//    var letterBelonging: LetterBelonging?
+//    var weapon: Weapon
 //    
-//    func writeText(_ text: String) {
-//        letterBelonging?.writeText("\(text)")
-//    }
-//}
-//
-//class RedPen: LetterBelonging {
-//    func writeText(_ text: String) {
-//        print("Пишем красной пастой: \(text)")
-//    }
-//}
-//
-//class BluePen: LetterBelonging {
-//    func writeText(_ text: String) {
-//        print("Пишем синей пастой: \(text)")
-//    }
-//}
-//
-//class Marker: LetterBelonging {
-//    func writeText(_ text: String) {
-//        print("Пишем маркером: \(text)")
-//    }
-//}
-//
-//let hand = Hand()
-//
-//hand.letterBelonging = RedPen()
-//hand.writeText("меня зовут Шамиль")
-//hand.letterBelonging = Marker()
-//hand.writeText("меня зовут Шамиль")
-
-//protocol Speed {
-//    var speed: Int { get }
-//    var brend: String { get }
-//}
-//
-//class Transport {
-//    var transport: Speed?
+//    private var _hp: Int = 0
 //    
-//    func checkSpeed() {
-//        print("Скорость автомобиля \(transport?.brend ?? "") = \(transport?.speed ?? 0)")
+//    var hp: Int {
+//        get { return _hp }
+//        set {
+//            _hp = newValue
+//        }
 //    }
-//}
-//
-//class BMW: Speed {
-//    let brend: String = "BMW"
-//    var speed: Int {
-//        100
+//    var strenght: Int {
+//        return 1
 //    }
 //    
+//    init(name: String, hp: Int, weapon: Weapon) {
+//        self.name = name
+//        self.weapon = weapon
+//        self.hp = hp
+//    }
 //    
-//}
-//
-//class Mersedes: Speed {
-//    let brend: String = "Mersedes"
-//    var speed: Int {
-//        98
+//    func reduseDamage() {
+//        let damage = strenght * 10
+//        print("нанес \(damage) урона")
+//        _hp = max(0, _hp - damage)
+//    }
+//    
+//    func attack() {
+//        print("\(typeFighter), \(name), ударил и", terminator: " ")
+//    }
+//    func balanceHP() {
+//        print("Осталось жизней \(_hp)")
+//    }
+//    func isDead() -> Bool {
+//        _hp <= 0 ? true : false
+//    }
+//    deinit {
+//        print("\(typeFighter) класс уничтожился")
 //    }
 //}
 //
-//let car = Transport()
+//class Mag: Fighter {
+//    
+//    override var typeFighter: String {
+//        return "Mag"
+//    }
+//    
+//    override var strenght: Int {
+//        50
+//    }
+//    
+//    override func attack() {
+//        if isDead() {
+//            print("\(name) мертв")
+//        } else {
+//            super.attack()
+//            super.reduseDamage()
+//        }
+//    }
+//    
+//    init?(name: String, weapon: Weapon) {
+//        super.init(name: name, hp: 100, weapon: weapon)
+//    }
+//}
 //
-//car.transport = BMW()
-//car.checkSpeed()
+//class Weapon {
+//    let nameWeapon: String
+//    
+//    weak var owner: Fighter?
 //
-//car.transport = Mersedes()
-//car.checkSpeed()
+//    init(nameWeapon: String, owner: Fighter? = nil) {
+//        self.nameWeapon = nameWeapon
+//        self.owner = owner
+//    }
+//}
+//
+//class Game {
+//    
+//    func startGame() {
+//        
+//        var sword = Weapon(nameWeapon: "Мечь")
+//        
+//        let mag = Mag(name: "Alex", weapon: sword)
+//        
+//        sword.owner = mag
+//        
+//        print("Боец \(sword.owner?.name) держит в руках \(sword.nameWeapon)")
+//    }
+//    
+//}
+//
+//let game = Game()
+//
+//game.startGame()
+//
 
-class Fighter {
-    var name: String = ""
-    
-    var typeFighter: String {
-        "Иван"
-    }
+//var x = "10"
+//var y = "5"
+//
+//func swap2<T>(_ a: inout T, _ b: inout T) {
+//    let temp = a
+//    a = b
+//    b = temp
+//}
+//
+//swap2(&x, &y)
+//
+//print("x = \(x)")
+//print("y = \(y)")
 
-    var isDead: Bool = false {
-        didSet {
-            if isDead {
-                print("Боец \(name) погиб")
-            }
-        }
-    }
-    
-    var weapon: String = ""
-    
-    private var _health: Int = 100
-    
-    var health: Int {
-        get {
-            return _health
-        }
-        set {
-            _health = _health - 10
-            if _health <= 0 {
-                isDead.toggle()
-            }
-        }
-    }
-    
-    func kick(damage: Int) -> Int {
-        let damage = damage + Int.random(in: 1...100)
-        return damage
-    }
-    
+// Протокол сравнивания 2-х объектов - Equatable
+
+//class Weapon {
+//    
+//    static func == (lhs: Weapon, rhs: Weapon) -> Bool {
+//        lhs.name == rhs.name
+//    }
+//    
+//    var name: String
+//    init(name: String) {
+//        self.name = name
+//    }
+//}
+//
+//func findIndex<T: Equatable>(of value: T, in array: [T]) -> T {
+//    for (index, _) in array.enumerated() {
+//        if array[index+1] == array[index] {
+//            return Weapon(name: "мечь") as! T
+//        }
+//    }
+//    return Weapon(name: "Топор") as! T
+//}
+//
+//let weapon = Weapon(name: "Топор")
+//
+//let result = findIndex(of: weapon, in: [weapon, weapon, weapon])
+//
+//print(result)
+
+protocol RaceTrack {
+    var model: String { get set }
+    func maxSpeed() -> Int
+    var spoiler: String { get }
 }
 
-class Warrior: Fighter {
-    
-    let randamazier = Int.random(in: 1...5)
-     
-    if randamazier == 3 {
-        useUltimateAbility(superKick: kick(damage: Int.random(in: 30..<1000)))
-    }
-    
-    func useUltimateAbility(superKick: Int) {
-        kick(damage: superKick)
-        print("\(name) разозлился и нанес противнику супер удар")
-    }
+protocol SpeedTrack {
+    var model: String { get set }
+    func maxSpeed() -> Int
+}
+protocol TrankProtocol {
+    var model: String { get set }
+    func unloading()
 }
 
-class Mag: Fighter {
-    func useUltimateAbility() {
-        
+class BMW: SpeedTrack, RaceTrack {
+    var spoiler: String {
+        "bmw spoiler"
     }
+    
+    
+    func maxSpeed() -> Int {
+        350
+    }
+    
+    var model: String = "BMV"
 }
 
+class Mersedes: SpeedTrack {
+    
+    func maxSpeed() -> Int {
+        350
+    }
+    
+    var model: String = "Mersedes"
+}
 
+class RaceCar: RaceTrack {
+    var spoiler: String {
+        "Спойлер"
+    }
+    
+    
+    func maxSpeed() -> Int {
+        350
+    }
+    
+    var model: String = "Mersedes"
+}
 
-let fighter = Fighter()
+class TrankCar: TrankProtocol {
+    func unloading() {
+        print("Выгрузка")
+    }
+    
+    var model: String = "TrankCar"
+}
 
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
-fighter.health = 10
-print(fighter.health)
+func race<T: SpeedTrack & RaceTrack>(auto: T) {
+    print("\(auto.model) начал гонку")
+}
 
+let trankCar = TrankCar()
+let bmv = BMW()
+let mersedes = Mersedes()
+let raceCar = RaceCar()
+
+race(auto: bmv)
